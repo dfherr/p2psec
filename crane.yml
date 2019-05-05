@@ -1,0 +1,11 @@
+services:
+  tcp-client:
+    image: "dfherr/p2p-tcpclient:latest"
+    networks: ["p2p-tcp"]
+    #detach: true
+    interactive: true
+    tty: true
+    volume: ["client:/peer"]
+    publish: ["34151:34151"]
+networks:
+  p2p-tcp:

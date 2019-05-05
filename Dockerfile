@@ -11,10 +11,10 @@ RUN apk add --update --no-cache \
     postgresql-dev \
   && rm -rf /var/cache/apk/*
 
-ADD /client/Gemfile /peer/Gemfile
-ADD /client/Gemfile.lock /peer/Gemfile.lock
+ADD /client/Gemfile /client/Gemfile
+ADD /client/Gemfile.lock /client/Gemfile.lock
 
-WORKDIR /peer
+WORKDIR /client
 
 RUN bundle install \
   && rm /usr/local/bundle/cache/*
@@ -33,15 +33,16 @@ RUN apk add --update --no-cache \
 
 ENV TZ Europe/Berlin
 
-ADD docker-bin/start_peer /usr/local/bin/start_peer
-RUN chmod 0755 /usr/local/bin/start_peer
+ADD docker-bin/start_client /usr/local/bin/start_client
+RUN chmod 0755 /usr/local/bin/start_client
 
-WORKDIR /peer
+WORKDIR /client
 
-ADD client/ /peer/
+ADD client/ /client/
+RUN chmod 0755 tcpclient.rb
 
 COPY --from=ruby_builder /usr/local/bundle /usr/local/bundle
 
 EXPOSE 3000
 
-CMD ["start_peer"]
+CMD ["start_client"]
